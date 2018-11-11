@@ -1,0 +1,153 @@
+# Bing automated translation of popt messages
+# This file is put in the public domain.
+# bing-et <popt-devel@rpm5.org>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: popt 1.17\n"
+"Report-Msgid-Bugs-To: <popt-devel@rpm5.org>\n"
+"POT-Creation-Date: 2017-03-19 12:46-0400\n"
+"PO-Revision-Date: 2015-05-12 17:15-0400\n"
+"Last-Translator: bing-et <popt-devel@rpm5.org>\n"
+"Language-Team: bing-et <popt-devel@rpm5.org>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: popt.c:54
+msgid "unknown errno"
+msgstr "Tundmatu veakood"
+
+#: popt.c:1453
+#, fuzzy, c-format
+msgid "option type (%u) not implemented in popt"
+msgstr "variant tüüp (%u) ei rakendatud popt\n"
+
+#: popt.c:1902
+msgid "missing argument"
+msgstr "Puuduv argument"
+
+#: popt.c:1904
+msgid "unknown option"
+msgstr "Tundmatu valik"
+
+#: popt.c:1906
+msgid "mutually exclusive logical operations requested"
+msgstr "taotletud teineteist välistavad loogikatehteid"
+
+#: popt.c:1908
+msgid "opt->arg should not be NULL"
+msgstr "valida-> arg ei tohiks olla NULL"
+
+#: popt.c:1910
+msgid "aliases nested too deeply"
+msgstr "liiga sügavalt pesistatud varjunimed"
+
+#: popt.c:1912
+msgid "error in parameter quoting"
+msgstr "tõrge, parameetri tsiteerimisel"
+
+#: popt.c:1914
+msgid "invalid numeric value"
+msgstr "Sobimatu arvväärtus"
+
+#: popt.c:1916
+msgid "number too large or too small"
+msgstr "number liiga suur või liiga väike"
+
+#: popt.c:1918
+msgid "memory allocation failed"
+msgstr "mälu jaotamine nurjus"
+
+#: popt.c:1920
+msgid "config file failed sanity test"
+msgstr "config faili ebaõnnestunud meelerahu test"
+
+#: popt.c:1922
+msgid "option does not take an argument"
+msgstr "võimalus olla argument"
+
+#: popt.c:1924
+msgid "stack underflow"
+msgstr "korstna underflow"
+
+#: popt.c:1926
+msgid "stack overflow"
+msgstr "pinu ületäitumine"
+
+#: popt.c:1930
+msgid "unknown error"
+msgstr "Tundmatu tõrge"
+
+#: popthelp.c:84 popthelp.c:95
+msgid "Show this help message"
+msgstr "Näita seda aitab sõnum"
+
+#: popthelp.c:85 popthelp.c:96
+msgid "Display brief usage message"
+msgstr "Teate kuvamine lühike kasutus"
+
+#: popthelp.c:99
+msgid "Display option defaults in message"
+msgstr "Kuvamiseks suvandi vaikesätted sõnumis"
+
+#: popthelp.c:101
+msgid "Terminate options"
+msgstr "Lõpetada Valikud"
+
+#: popthelp.c:200
+msgid "Help options:"
+msgstr "Abi valikud:"
+
+#: popthelp.c:201
+msgid "Options implemented via popt alias/exec:"
+msgstr "Võimalusi rakendada popt alias/exec:"
+
+#: popthelp.c:209
+msgid "NONE"
+msgstr "ÜKSKI"
+
+#: popthelp.c:211
+msgid "VAL"
+msgstr "VAL"
+
+#: popthelp.c:215
+msgid "INT"
+msgstr "INT"
+
+#: popthelp.c:216
+msgid "SHORT"
+msgstr "LÜHIKE"
+
+#: popthelp.c:217
+msgid "LONG"
+msgstr "PIKK"
+
+#: popthelp.c:218
+msgid "LONGLONG"
+msgstr "LONGLONG"
+
+#: popthelp.c:219
+msgid "STRING"
+msgstr "STRING"
+
+#: popthelp.c:220
+msgid "FLOAT"
+msgstr "UJUK"
+
+#: popthelp.c:221
+msgid "DOUBLE"
+msgstr "KAHEINIMESETUBA, DOUBLE"
+
+#: popthelp.c:224
+msgid "ARG"
+msgstr "ARG"
+
+#: popthelp.c:665
+msgid "Usage:"
+msgstr "Kasutamine:"
+
+#: popthelp.c:690
+msgid "[OPTION...]"
+msgstr "[VALIK]"
