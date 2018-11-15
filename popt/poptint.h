@@ -11,9 +11,6 @@
 
 #include <stdint.h>
 
-#define	SUPPORT_GLOBAL_CALCULATOR	1
-#define	SUPPORT_CONTIGUOUS_ARGV		1
-
 /**
  * Wrapper to free(3), hides const compilation noise, permit NULL, return NULL.
  * @param p		memory to free

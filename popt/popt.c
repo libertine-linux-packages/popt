@@ -254,7 +254,7 @@ void poptResetContext(poptContext con)
     con->os->argb = PBM_FREE(con->os->argb);
     con->os->currAlias = NULL;
     con->os->nextCharArg = NULL;
-    con->os->nextArg = _free(con->os->nextArg);
+    con->os->nextArg = NULL;
     con->os->next = 1;			/* skip argv[0] */
 
     con->numLeftovers = 0;
@@ -285,13 +285,13 @@ static int handleExec(/*@special@*/ poptContext con,
 		con->av, con->nav, con->ac @*/
 	/*@modifies con @*/
 {
+    poptItem item;
     int i;
 
-    if (con->execs == NULL || con->numExecs == 0)
+    if (con->execs == NULL || con->numExecs <= 0)
 	return 0;
 
     for (i = con->numExecs - 1; i >= 0; i--) {
-	poptItem item;
 	item = con->execs + i;
 	if (longName && !(item->option.longName &&
 			!strcmp(longName, item->option.longName)))
@@ -697,7 +697,6 @@ static const char * findNextArg(/*@special@*/ poptContext con,
     const char * arg;
 
     do {
-	// cppcheck-suppress variableScope
 	int i;
 	arg = NULL;
 	while (os->next == os->argc && os > con->optionStack) os--;
@@ -733,11 +732,13 @@ expandNextArg(/*@special@*/ poptContext con, const char * s)
 	/*@modifies con @*/
 {
     const char * a = NULL;
+    char *t, *te;
     size_t tn = strlen(s) + 1;
-    char *t = (char*) xmalloc(tn);
-    char *te = t;
     char c;
 
+    te = t = (char*) xmalloc(tn);
+assert(t);	/* XXX can't happen */
+    if (t == NULL) return NULL;
     *t = '\0';
     while ((c = *s++) != '\0') {
 	switch (c) {
@@ -758,8 +759,8 @@ expandNextArg(/*@special@*/ poptContext con, const char * s)
 
 	    tn += strlen(a);
 	    {   size_t pos = (size_t) (te - t);
-		/* cppcheck-suppress memleakOnRealloc  */
-		t = (char*) xrealloc(t, tn);
+        t = (char*) xrealloc(t, tn);
+assert(t);	/* XXX can't happen */
 		if (t == NULL)
 		    return NULL;
 		te = stpcpy(t + pos, a);
@@ -775,7 +776,7 @@ expandNextArg(/*@special@*/ poptContext con, const char * s)
     /* If the new string is longer than needed, shorten. */
     if ((t + tn) > te) {
 /*@-usereleased@*/	/* XXX splint can't follow the pointers. */
-	if ((te = (char*) xrealloc(t, (size_t)(te - t))) == NULL)
+    if ((te = (char*) xrealloc(t, (size_t)(te - t))) == NULL)
 	    free(t);
 	t = te;
 /*@=usereleased@*/
@@ -1028,11 +1029,9 @@ static long long poptCalculator(long long arg0, unsigned argInfo, long long arg1
 		/*@null@*/ const char * expr, int * rcp)
 {
 int ixmax = 20;	/* XXX overkill */
-// cppcheck-suppress obsoleteFunctionsalloca
 poptStack_t stk = (poptStack_t) memset((poptStack_t)alloca(ixmax*sizeof(*stk)), 0, (ixmax*sizeof(*stk)));
     int ix = 0;
 size_t nt = 64;	/* XXX overkill */
-// cppcheck-suppress obsoleteFunctionsalloca
 char * t = (char*) alloca(nt);
 char * te = t;
 const char * s;
@@ -1310,23 +1309,14 @@ static int poptSaveArg(poptContext con, const struct poptOption * opt)
     case POPT_ARG_BITSET:
 	/* XXX memory leak, application is responsible for free. */
 	rc = poptSaveBits(arg.ptr, opt->argInfo, con->os->nextArg);
-#if 0
-con->os->nextArg = _free(con->os->nextArg);
-#endif
 	/*@switchbreak@*/ break;
     case POPT_ARG_ARGV:
 	/* XXX memory leak, application is responsible for free. */
 	rc = poptSaveString(arg.ptr, opt->argInfo, con->os->nextArg);
-#if 0
-con->os->nextArg = _free(con->os->nextArg);
-#endif
 	/*@switchbreak@*/ break;
     case POPT_ARG_STRING:
 	/* XXX memory leak, application is responsible for free. */
-	arg.argv[0] = con->os->nextArg;
-#if 1
-con->os->nextArg = NULL;
-#endif
+	arg.argv[0] = (con->os->nextArg) ? xstrdup(con->os->nextArg) : NULL;
 	/*@switchbreak@*/ break;
 
     case POPT_ARG_LONGLONG:
@@ -1396,9 +1386,6 @@ con->os->nextArg = NULL;
 		arg.shortp[0] = (short) aNUM;
 	    /*@innerbreak@*/ break;
 	}
-#if 0
-con->os->nextArg = _free(con->os->nextArg);
-#endif
     }   /*@switchbreak@*/ break;
 
     case POPT_ARG_FLOAT:
@@ -1440,9 +1427,6 @@ con->os->nextArg = _free(con->os->nextArg);
 	    arg.floatp[0] = (float) aDouble;
 	    /*@innerbreak@*/ break;
 	}
-#if 0
-con->os->nextArg = _free(con->os->nextArg);
-#endif
     }   /*@switchbreak@*/ break;
     case POPT_ARG_MAINCALL:
 /*@-assignexpose -type@*/
@@ -1450,9 +1434,8 @@ con->os->nextArg = _free(con->os->nextArg);
 /*@=assignexpose =type@*/
 	/*@switchbreak@*/ break;
     default:
-	fprintf(stdout, POPT_("option type (%u) not implemented in popt"),
+	fprintf(stdout, POPT_("option type (%u) not implemented in popt\n"),
 		poptArgType(opt));
-	fprintf(stdout, "\n");
 	exit(EXIT_FAILURE);
 	/*@notreached@*/ /*@switchbreak@*/ break;
     }
@@ -1709,7 +1692,7 @@ assert(s);	/* XXX can't happen */
 		if (opt->longName) {
 		    if (!F_ISSET(opt, ONEDASH))
 			*s++ = '-';
-		    (void)stpcpy(s, opt->longName);
+		    s = stpcpy(s, opt->longName);
 		} else {
 		    *s++ = opt->shortName;
 		    *s = '\0';
@@ -1781,16 +1764,20 @@ poptItem poptFreeItems(/*@only@*/ /*@null@*/ poptItem items, int nitems)
 {
     if (items != NULL) {
 	poptItem item = items;
+	int i;
 	while (--nitems >= 0) {
-	    item->argv = poptArgvFree(item->argv);
 /*@-modobserver -observertrans -dependenttrans@*/
 	    item->option.longName = _free(item->option.longName);
 	    item->option.descrip = _free(item->option.descrip);
 	    item->option.argDescrip = _free(item->option.argDescrip);
 /*@=modobserver =observertrans =dependenttrans@*/
+#if !defined(SUPPORT_CONTIGUOUS_ARGV)
+	    for (i = 0; item->argv[i]; i++)
+		item->argv[i] = _free(item->argv[i]);
+#endif
+	    item->argv = _free(item->argv);
 	    item++;
 	}
-	// cppcheck-suppress uselessAssignmentPtrArg
 	items = _free(items);
     }
     return NULL;
@@ -1847,13 +1834,11 @@ int poptAddItem(poptContext con, poptItem newItem, int flags)
     case 1:
 	items = &con->execs;
 	nitems = &con->numExecs;
-	// cppcheck-suppress memleakOnRealloc
       *items = (poptItem) xrealloc(*items, ((*nitems) + 1) * sizeof(**items));
 	break;
     case 0:
 	items = &con->aliases;
 	naliases = &con->numAliases;
-	// cppcheck-suppress memleakOnRealloc
       *items = (poptItem) xrealloc(*items, ((*naliases) + 1) * sizeof(**items));
 	break;
     default:

@@ -12,5 +12,5 @@
 
 ```bash
 cvs -d :pserver:anonymous@rpm5.org:/cvs login
-cvs -d :pserver:anonymous@rpm5.org:/cvs co popt
+cvs -d :pserver:anonymous@rpm5.org:/cvs co -r popt_1_17 popt
 ```

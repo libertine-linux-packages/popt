@@ -1,159 +1,154 @@
 # Translation into the ukrainian language.
 # Copyright (C) 1999 Free Software Foundation, Inc.
-# This file is distributed under the same license as the popt package.
-#
 # Yuri Syrota <rasta@renome.rovno.ua>, 1999.
-# Yuri Chornoivan <yurchor@ukr.net>, 2015.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: popt 1.16\n"
+"Project-Id-Version: popt 1.11\n"
 "Report-Msgid-Bugs-To: <popt-devel@rpm5.org>\n"
-"POT-Creation-Date: 2017-03-19 12:46-0400\n"
-"PO-Revision-Date: 2015-03-29 18:07+0300\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
-"Language: uk\n"
+"POT-Creation-Date: 2012-02-09 17:12+0100\n"
+"PO-Revision-Date: 1999-09-30 16:54+0200\n"
+"Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=koi8-u\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.5\n"
+"Language: uk\n"
 
 #: popt.c:54
 msgid "unknown errno"
-msgstr "невідомий номер помилки"
+msgstr ""
 
-#: popt.c:1453
-#, fuzzy, c-format
-msgid "option type (%u) not implemented in popt"
-msgstr "тип параметра (%u) у popt не реалізовано\n"
+#: popt.c:1437
+#, c-format
+msgid "option type (%u) not implemented in popt\n"
+msgstr ""
 
-#: popt.c:1902
+#: popt.c:1887
 msgid "missing argument"
-msgstr "пропущено аргумент"
+msgstr ""
 
-#: popt.c:1904
+#: popt.c:1889
 msgid "unknown option"
-msgstr "невідомий параметр"
+msgstr ""
 
-#: popt.c:1906
+#: popt.c:1891
 msgid "mutually exclusive logical operations requested"
-msgstr "надійшов запит на взаємно виключні логічні операції"
+msgstr ""
 
-#: popt.c:1908
+#: popt.c:1893
 msgid "opt->arg should not be NULL"
-msgstr "параметр->аргумент повинне не дорівнювати NULL"
+msgstr ""
 
-#: popt.c:1910
+#: popt.c:1895
 msgid "aliases nested too deeply"
-msgstr "надто великий рівень вкладеності у альтернативних назвах"
+msgstr ""
 
-#: popt.c:1912
+#: popt.c:1897
 msgid "error in parameter quoting"
-msgstr "помилка у використанні лапок у параметрі"
+msgstr ""
 
-#: popt.c:1914
+#: popt.c:1899
 msgid "invalid numeric value"
-msgstr "некоректне числове значення"
+msgstr ""
 
-#: popt.c:1916
+#: popt.c:1901
 msgid "number too large or too small"
-msgstr "число є надто великим або надто малим"
+msgstr ""
 
-#: popt.c:1918
+#: popt.c:1903
 msgid "memory allocation failed"
-msgstr "не вдалося отримати місце у пам'яті"
+msgstr ""
 
-#: popt.c:1920
+#: popt.c:1905
 msgid "config file failed sanity test"
-msgstr "файл налаштувань не пройшов перевірку на чинність"
+msgstr ""
 
-#: popt.c:1922
+#: popt.c:1907
 msgid "option does not take an argument"
 msgstr ""
 
-#: popt.c:1924
+#: popt.c:1909
 msgid "stack underflow"
 msgstr ""
 
-#: popt.c:1926
+#: popt.c:1911
 msgid "stack overflow"
 msgstr ""
 
-#: popt.c:1930
+#: popt.c:1915
 msgid "unknown error"
-msgstr "невідома помилка"
+msgstr ""
+
+#: popthelp.c:83 popthelp.c:94
+msgid "Show this help message"
+msgstr "�������� �� ��צ���"
 
 #: popthelp.c:84 popthelp.c:95
-msgid "Show this help message"
-msgstr "Показати цю довідку"
-
-#: popthelp.c:85 popthelp.c:96
 msgid "Display brief usage message"
-msgstr "Показати коротку довідку про використання"
+msgstr "�������� ������� ��צ��� ��� ������������"
 
-#: popthelp.c:99
+#: popthelp.c:98
+#, fuzzy
 msgid "Display option defaults in message"
-msgstr "Показати типові значення параметрів у повідомленні"
+msgstr "�������� ������� ��צ��� ��� ������������"
 
-#: popthelp.c:101
+#: popthelp.c:100
 msgid "Terminate options"
-msgstr "Завершити параметри"
+msgstr ""
+
+#: popthelp.c:199
+msgid "Help options:"
+msgstr ""
 
 #: popthelp.c:200
-msgid "Help options:"
-msgstr "Параметри довідки:"
-
-#: popthelp.c:201
 msgid "Options implemented via popt alias/exec:"
-msgstr "Параметри, реалізовані за допомогою alias/exec popt:"
+msgstr ""
 
-#: popthelp.c:209
+#: popthelp.c:208
 msgid "NONE"
-msgstr "НІЧОГО"
+msgstr ""
 
-#: popthelp.c:211
+#: popthelp.c:210
 msgid "VAL"
-msgstr "ЗНАЧЕННЯ"
+msgstr ""
+
+#: popthelp.c:214
+msgid "INT"
+msgstr ""
 
 #: popthelp.c:215
-msgid "INT"
-msgstr "ЦІЛЕ"
+msgid "SHORT"
+msgstr ""
 
 #: popthelp.c:216
-msgid "SHORT"
-msgstr "КОРОТКЕ"
+msgid "LONG"
+msgstr ""
 
 #: popthelp.c:217
-msgid "LONG"
-msgstr "ДОВГЕ"
+msgid "LONGLONG"
+msgstr ""
 
 #: popthelp.c:218
-msgid "LONGLONG"
-msgstr "LONGLONG"
+msgid "STRING"
+msgstr ""
 
 #: popthelp.c:219
-msgid "STRING"
-msgstr "РЯДОК"
+msgid "FLOAT"
+msgstr ""
 
 #: popthelp.c:220
-msgid "FLOAT"
-msgstr "FLOAT"
-
-#: popthelp.c:221
 msgid "DOUBLE"
-msgstr "DOUBLE"
+msgstr ""
 
-#: popthelp.c:224
+#: popthelp.c:223
 msgid "ARG"
-msgstr "АРГУМЕНТ"
+msgstr ""
 
-#: popthelp.c:665
+#: popthelp.c:664
 msgid "Usage:"
-msgstr "Користування:"
+msgstr ""
 
-#: popthelp.c:690
+#: popthelp.c:689
 msgid "[OPTION...]"
-msgstr "[ПАРАМЕТР...]"
+msgstr ""

@@ -6,51 +6,38 @@ AC_INIT([popt],[1.17.DEVEL],[popt-devel@rpm5.org])
 
 AC_CONFIG_SRCDIR([lookup3.c])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_LINKS([testit.sh:testit.sh])
-AC_CONFIG_LINKS([test-poptrc:test-poptrc])
-AC_CONFIG_LINKS([test3-data/01.answer:test3-data/01.answer])
-AC_CONFIG_LINKS([test3-data/01.input:test3-data/01.input])
-AC_CONFIG_LINKS([test3-data/02.answer:test3-data/02.answer])
-AC_CONFIG_LINKS([test3-data/02.input:test3-data/02.input])
-AC_CONFIG_LINKS([test3-data/03.answer:test3-data/03.answer])
-AC_CONFIG_LINKS([test3-data/03.input:test3-data/03.input])
 AC_CONFIG_MACRO_DIR([m4])
 
 # Must come before AM_INIT_AUTOMAKE.
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE([1.11 color-tests -Wall -Werror foreign])
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-# --- libtool-2.4.6 uses "cru" with error msg
-#       /usr/bin/ar: `u' modifier ignored since `D' is the default (see `U')
-AC_SUBST([AR_FLAGS], [cr])
-
+AM_INIT_AUTOMAKE([1.14 color-tests -Wall -Werror foreign serial-tests])
 #
 # Checks for programs.
 # Set common system defines for POSIX extensions, such as GNU_SOURCE
 # Must be called before any macros that run the compiler (like AC-PROG-LIBTOOL)
 AC_USE_SYSTEM_EXTENSIONS
-AM_GNU_GETTEXT_VERSION([0.18.2])
+AM_PROG_AR
+AM_GNU_GETTEXT_VERSION([0.19])
 AM_GNU_GETTEXT([external])
 AM_ICONV
 AM_MAINTAINER_MODE
-
 # Libtool library interface versions 
 # Library code modified:                              REVISION++
 # Interfaces changed/added/removed:   CURRENT++       REVISION=0
 # Interfaces added:                             AGE++
 # Interfaces removed:                           AGE=0
-AC_SUBST(LT_CURRENT,  8)
+AC_SUBST(LT_CURRENT, 0)
 AC_SUBST(LT_REVISION, 0)
-AC_SUBST(LT_AGE,      8)
-AC_SUBST(DLL_VERSION, 0)
+AC_SUBST(LT_AGE, 8)
 
-AC_PROG_CC_STDC
+
+
 AC_PROG_CC
+AC_PROG_CC_STDC
 AC_SYS_LARGEFILE
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
-AM_PROG_AR
 AC_PROG_LIBTOOL
 
 # Turn gcc warning
@@ -69,76 +56,78 @@ AC_ARG_ENABLE([gcc-warnings],
 AS_IF([test "x$popt_gcc_warnings" = xyes],
   [ # Add/Delete as needed
   MAX_STACK_SIZE=32768
-  popt_CFLAGS_ADD([-fasynchronous-unwind-tables],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-fdiagnostics-show-option],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-fipa-pure-const],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-fstack-protector-all],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-fstrict-aliasing],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-fstrict-overflow],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-funit-at-a-time],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-pedantic], [POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Waggregate-return],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wall], [POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wattributes],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-pedantic], [POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wextra], [POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wformat-y2k], [POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fdiagnostics-show-option],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-funit-at-a-time],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fstrict-aliasing],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wstrict-overflow],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fstrict-overflow],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wpointer-arith],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wundef],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wformat-security],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Winit-self],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmissing-include-dirs],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wunused],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wunknown-pragmas],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wstrict-aliasing],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wshadow],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wbad-function-cast],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wbuiltin-macro-redefined],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wcast-align],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wcoverage-mismatch],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wcpp],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wdeclaration-after-statement],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wdeprecated-declarations],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wwrite-strings],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wlogical-op],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Waggregate-return],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wstrict-prototypes],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wold-style-definition],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmissing-prototypes],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmissing-declarations],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmissing-noreturn],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmissing-format-attribute],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wredundant-decls],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wnested-externs],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Winline],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Winvalid-pch],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wvolatile-register-var],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wdisabled-optimization],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wbuiltin-macro-redefined],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmudflap],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wpacked-bitfield-compat],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wsync-nand],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wattributes],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wcoverage-mismatch],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wmultichar],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wcpp],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wdeprecated-declarations],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wdiv-by-zero],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wdouble-promotion],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wendif-labels],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wextra], [POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wformat=2],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wformat-contains-nul],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wformat-extra-args],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wformat-security],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wformat-y2k], [POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wformat-zero-length],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wframe-larger-than=$MAX_STACK_SIZE],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Winit-self],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Winline],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Winvalid-pch],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wjump-misses-init],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wlogical-op],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmissing-declarations],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmissing-format-attribute],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmissing-include-dirs],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmissing-noreturn],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmissing-prototypes],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wmudflap],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wformat=2],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wmultichar],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wnested-externs],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wno-aggregate-return],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wno-format-nonliteral],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wno-missing-field-initializers],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wno-redundant-decls],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wnormalized=nfc],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wno-sign-compare],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wold-style-definition],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Woverflow],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wpacked-bitfield-compat],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wpointer-arith],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wpointer-to-int-cast],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wpragmas],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wredundant-decls],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wshadow],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wstrict-aliasing],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wstrict-overflow],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wstrict-prototypes],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wsuggest-attribute=const],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wsuggest-attribute=noreturn],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wsuggest-attribute=pure],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wsync-nand],[POPT_CFLAGS])
   popt_CFLAGS_ADD([-Wtrampolines],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wundef],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wunknown-pragmas],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wunused],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wvolatile-register-var],[POPT_CFLAGS])
-  popt_CFLAGS_ADD([-Wwrite-strings],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wno-missing-field-initializers],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wno-sign-compare],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wjump-misses-init],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wno-format-nonliteral],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wframe-larger-than=$MAX_STACK_SIZE],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fstack-protector-all],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fasynchronous-unwind-tables],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fdiagnostics-show-option],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-funit-at-a-time],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-fipa-pure-const],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wno-aggregate-return],[POPT_CFLAGS])
+  popt_CFLAGS_ADD([-Wno-redundant-decls],[POPT_CFLAGS])
   ])
 
 # build popt with mudflap instrumentation (GCC only)
@@ -177,16 +166,10 @@ AS_IF([ test x"$popt_gcc_mudflap" = x"yes" ],
 			AC_SUBST([MUDFLAP_OPTIONS])
                       ])
               ],
-              [ popt_gcc_mudflap=no
-               AC_MSG_WARN([--enable-mudflap requires GCC])
-              ]
+              [ AC_MSG_WARN([--enable-mudflap requires GCC])]
         )
       ])
      
-
-dnl # build popt instrumented for -fPIC always
-dnl #  popt_CFLAGS_ADD([-fPIC -DPIC], [POPT_CFLAGS])
-dnl #  popt_CFLAGS_ADD([-KPIC -DPIC], [POPT_CFLAGS])
 
 # build popt instrumented for -fPIE (GCC only)
 AC_ARG_ENABLE([build-pie],
@@ -205,8 +188,7 @@ AS_IF([test "x$popt_gcc_pie" = xyes],
               [ popt_CFLAGS_ADD([-fpie], [POPT_CFLAGS])
                 popt_LDFLAGS_ADD([-pie], [POPT_LDFLAGS])
               ],
-              [ popt_gcc_pie=no
-                AC_MSG_WARN([--enable-build-pie requires GCC])]
+              [ AC_MSG_WARN([--enable-build-pie requires GCC])]
         )
       ])
 AC_SUBST([POPT_LDFLAGS])
@@ -229,14 +211,13 @@ AC_SUBST([POPT_CFLAGS])
 
 # Support for running test cases using valgrind:
 
-use_valgrind=no
-HAVE_VALGRIND=no
+use_valgrind=false
 VALGRIND_ENVIRONMENT=""
-AC_ARG_ENABLE([valgrind],
+AC_ARG_ENABLE(valgrind,
 [  --enable-valgrind       Use valgrind when running unit tests. ],
-[ use_valgrind=yes ])
+[ use_valgrind=true ])
 
-AS_IF([ test x"$use_valgrind" = x"yes" ], 
+AS_IF([ test x"$use_valgrind" = x"true" ], 
       [
         AC_CHECK_PROG(HAVE_VALGRIND, valgrind, yes, no)
         AS_IF([ test x$HAVE_VALGRIND = no ],
@@ -256,7 +237,7 @@ AS_IF([ test x"$use_valgrind" = x"yes" ],
      
 #  Checks for doxygen support. 
 AC_PATH_PROG(DOXYGEN, doxygen, NO_DOXYGEN)
-AC_ARG_ENABLE([doxygen],
+AC_ARG_ENABLE(doxygen,
     AS_HELP_STRING([--disable-doxygen],[disable doxygen API docs generation ]),
     [DOXYGEN_ENABLE=$enableval,
     if test x$DOXYGEN_ENABLE != xno 
@@ -275,8 +256,8 @@ AM_CONDITIONAL([DOXYGEN_ENABLE], [test x$DOXYGEN != xNO_DOXYGEN])
 
 # Check for gcov support.
 # Check for lcov  Makefile conditional
-AC_PATH_PROG(LCOV,lcov, no)
-AC_ARG_ENABLE([build-gcov],
+AC_PATH_PROG(LCOV,lcov, NO_LCOV)
+AC_ARG_ENABLE(build-gcov,
     AS_HELP_STRING([--enable-build-gcov], [build POPT instrumented for gcov @<:@default=no@:>@.]), 
     [enable_build_gcov=${enableval}],
     [enable_build_gcov=no])
@@ -288,10 +269,10 @@ AS_IF([test "x$enable_build_gcov" != xno],
             popt_CFLAGS_ADD([-fprofile-arcs -ftest-coverage], [POPT_CFLAGS])
             AC_SUBST([POPT_CFLAGS])
         else
-            LCOV=no
+            LCOV=NO_LCOV
         fi 
        ])
-AM_CONDITIONAL([HAVE_LCOV], [test x$LCOV != xno])
+AM_CONDITIONAL([HAVE_LCOV], [test x$LCOV != xNO_LCOV])
 
 # Check for api-sanity-autotest.pl Makefile conditional support for check-local
 AC_PATH_PROG(API_SANITY_AUTOTEST,api-sanity-autotest.pl,NO_API_SANITY_AUTOTEST)
@@ -302,9 +283,6 @@ AM_CONDITIONAL([HAVE_SPLINT],[test "x$SPLINT" != xNO_SPLINT])
 # Check for mccabe makefile conditional support
 AC_PATH_PROG(MCCABE,pmccabe,NO_MCCABE)
 AM_CONDITIONAL([HAVE_MCCABE],[test "x$MCCABE" != xNO_MCCABE])
-# Check for cppcheck makefile conditional support
-AC_PATH_PROG(CPPCHECK,cppcheck,NO_CPPCHECK)
-AM_CONDITIONAL([HAVE_CPPCHECK],[test "x$CPPCHECK" != xNO_CPPCHECK])
 # Checks for libraries.
 
 # Checks for header files.
@@ -325,7 +303,7 @@ AC_TYPE_INT64_T
 AC_CHECK_FUNC(setreuid, [], [
     AC_CHECK_LIB(ucb, setreuid, [if echo $LIBS | grep -- -lucb >/dev/null ;then :; else LIBS="$LIBS -lc -lucb" USEUCB=y;fi])
 ])
-AC_CHECK_FUNCS([getuid geteuid iconv mtrace __secure_getenv secure_gentenv setregid stpcpy strerror vasprintf srandom])
+AC_CHECK_FUNCS([getuid geteuid iconv mtrace __secure_getenv secure_getenv setregid stpcpy strerror vasprintf srandom])
 # drop AC_FUNC_MALLOC, REALLOC and STRTOD
 AC_CHECK_FUNCS([malloc realloc strtod memset nl_langinfo stpcpy strchr strerror strrchr])
 
@@ -420,15 +398,3 @@ AC_SUBST([POPT_PKGCONFIG_LIBS],"$popt_pkgconfig_libs")
 AC_CONFIG_FILES([Makefile Doxyfile popt.pc popt.spec po/Makefile.in
     auto/Makefile auto/desc ])
 AC_OUTPUT
-
-# Print a summary of what features we enabled and have 
-AC_MSG_NOTICE([Summary of detected features follows])
-
-popt_MSG_STATUS([gcc-warnings],[$popt_gcc_warnings],[$popt_gcc_warnings])
-popt_MSG_STATUS([mudflap],[$popt_gcc_mudflap],[$popt_gcc_mudflap])
-popt_MSG_STATUS([build-pie],[$popt_gcc_pie],[$popt_gcc_pie])
-popt_MSG_STATUS([valgrind],[$HAVE_VALGRIND],[$use_valgrind])
-popt_MSG_STATUS([doxygen],[$DOXYGEN_ENABLE],[$DOXYGEN_ENABLE])
-popt_MSG_STATUS([build-gcov],[$LCOV], [$enable_build_gcov])
-popt_MSG_STATUS([ld-version-script],[LD_VERSION_SCRIPT_FLAG=$LD_VERSION_SCRIPT_FLAG],[$have_ld_version_script])
-

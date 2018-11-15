@@ -8,7 +8,6 @@ LIBPOPT_0
     poptAddAlias;
     poptAddItem;
     poptAliasOptions;
-    poptArgvFree;
     poptBadOption;
     _poptBitsN;
     _poptBitsM;

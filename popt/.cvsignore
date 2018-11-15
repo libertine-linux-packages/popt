@@ -2,7 +2,6 @@
 .deps
 .depend
 .libs
-.syntastic_*
 ABOUT-NLS
 ChangeLog
 Doxyfile
@@ -12,7 +11,7 @@ aclocal.m4
 autom4te*
 build
 build-aux
-build-aux/test-driver
+build-aux
 clang
 config.cache
 config.guess
@@ -24,8 +23,6 @@ config.status
 config.sub
 configmake.h
 configure
-cov-int
-cscope.*
 doxygen
 depcomp
 install-sh
@@ -38,7 +35,6 @@ m4
 missing
 mkinstalldirs
 popt.spec
-popt.tgz
 stamp-h
 stamp-h1
 stamp-h.in
@@ -53,9 +49,7 @@ test?-test?.o
 *.la
 *.lcd
 *.lo
-*.log
 *.swp
-*.trs
 popt.pc
 popt-*.tar.gz
 .git

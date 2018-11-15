@@ -42,10 +42,11 @@ extern int glob_pattern_p (const char *__pattern, int __quote)
 /*@=declundef =exportheader =incondefs =protoparammatch =redecl =type @*/
 #endif	/* __LCLINT__ */
 
+#if !defined(__GLIBC__)
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 static int
-poptGlob_pattern_p (const char * pattern, int quote)
+glob_pattern_p (const char * pattern, int quote)
 	/*@*/
 {
     const char * p;
@@ -71,12 +72,7 @@ poptGlob_pattern_p (const char * pattern, int quote)
     }
     return 0;
 }
-
-#if defined(HAVE_ASSERT_H)
-#include <assert.h>
-#else
-#define assert(_x)
-#endif
+#endif	/* !defined(__GLIBC__) */
 
 /*@unchecked@*/
 static int poptGlobFlags = 0;
@@ -109,10 +105,10 @@ static int poptGlob(/*@unused@*/ UNUSED(poptContext con), const char * pattern,
 	pat++;
 
 #if defined(HAVE_GLOB_H)
-    if (poptGlob_pattern_p(pat, 0)) {
+    if (glob_pattern_p(pat, 0)) {
 	glob_t _g, *pglob = &_g;
 
-	if (!(rc = glob(pat, poptGlobFlags, poptGlob_error, pglob))) {
+	if (!glob(pat, poptGlobFlags, poptGlob_error, pglob)) {
 	    if (acp) {
 		*acp = (int) pglob->gl_pathc;
 		pglob->gl_pathc = 0;
@@ -126,10 +122,6 @@ static int poptGlob(/*@unused@*/ UNUSED(poptContext con), const char * pattern,
 /*@-nullstate@*/
 	    globfree(pglob);
 /*@=nullstate@*/
-	} else if (rc == GLOB_NOMATCH) {
-	    *avp = NULL;
-	    *acp = 0;
-	    rc = 0;
 	} else
 	    rc = POPT_ERROR_ERRNO;
     } else
@@ -169,6 +161,7 @@ int poptReadFile(const char * fn, char ** bp, size_t * nbp, int flags)
     int fdno;
     char * b = NULL;
     off_t nb = 0;
+    char * s, * t, * se;
     int rc = POPT_ERROR_ERRNO;	/* assume failure */
 
     fdno = open(fn, O_RDONLY);
@@ -198,7 +191,6 @@ int poptReadFile(const char * fn, char ** bp, size_t * nbp, int flags)
     if (flags & POPT_READFILE_TRIMNEWLINES)
 /*@=bitwisesigned@*/
     {
-	char * s, * t, * se;
 	for (t = b, s = b, se = b + nb; *s && s < se; s++) {
 	    switch (*s) {
 	    case '\\':
@@ -327,7 +319,6 @@ static int poptConfigLine(poptContext con, char * line)
 	/* Append remaining text to the interpolated file option text. */
 	if (*se != '\0') {
 	    size_t nse = strlen(se) + 1;
-	    /* cppcheck-suppress memleakOnRealloc  */
 	    if ((b = (char*) realloc(b, (nb + nse))) == NULL)	/* XXX can't happen */
 		goto exit;
 	    (void) stpcpy( stpcpy(&b[nb-1], " "), se);
@@ -341,7 +332,8 @@ static int poptConfigLine(poptContext con, char * line)
 		longName++;
 	    else
 		longName = fn;
-assert(longName != NULL);	/* XXX can't happen. */
+	    if (longName == NULL)	/* XXX can't happen. */
+		goto exit;
 	    /* Single character basenames are treated as short options. */
 	    if (longName[1] != '\0')
 		item->option.longName = longName;
@@ -404,10 +396,8 @@ int poptReadConfigFile(poptContext con, const char * fn)
 
     if ((rc = poptReadFile(fn, &b, &nb, POPT_READFILE_TRIMNEWLINES)) != 0)
 	return (errno == ENOENT ? 0 : rc);
-    if (b == NULL || nb == 0) {
-	rc = POPT_ERROR_BADCONFIG;
-	goto exit;
-    }
+    if (b == NULL || nb == 0)
+	return POPT_ERROR_BADCONFIG;
 
     if ((t = (char*) malloc(nb + 1)) == NULL)
 	goto exit;
@@ -503,6 +493,7 @@ int poptReadDefaultConfig(poptContext con, /*@unused@*/ UNUSED(int useEnv))
 {
     static const char _popt_alias[] = POPT_ALIAS;
     char * home;
+    struct stat sb;
     int rc = 0;		/* assume success */
 
     if (con->appName == NULL) goto exit;
@@ -511,13 +502,11 @@ int poptReadDefaultConfig(poptContext con, /*@unused@*/ UNUSED(int useEnv))
     if (rc) goto exit;
 
 #if defined(HAVE_GLOB_H)
-    {
-    struct stat sb;
-    if (!stat(SYSCONFDIR"/popt.d", &sb) && S_ISDIR(sb.st_mode)) {
+    if (!stat("SYSCONFDIR/popt.d", &sb) && S_ISDIR(sb.st_mode)) {
 	const char ** av = NULL;
 	int ac = 0;
 
-	if ((rc = poptGlob(con, SYSCONFDIR"/popt.d/*", &ac, &av)) == 0) {
+	if ((rc = poptGlob(con, "SYSCONFDIR/popt.d/*", &ac, &av)) == 0) {
 	    int i;
 	    for (i = 0; rc == 0 && i < ac; i++) {
 		const char * fn = av[i];
@@ -532,7 +521,6 @@ int poptReadDefaultConfig(poptContext con, /*@unused@*/ UNUSED(int useEnv))
 	    }
 	    av=_free(av);
 	}
-     }
     }
     if (rc) goto exit;
 #endif

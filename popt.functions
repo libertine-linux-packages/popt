@@ -62,7 +62,7 @@ case "$package" in
 esac
 
 
-build_needs mkdir cp ln
+build_needs sed
 _libertine_compile_popt_internal()
 {
 	local destinationSysrootPath="$1"
@@ -73,17 +73,29 @@ _libertine_compile_popt_internal()
 		libertine_public_autoconf_replaceWithKnownVersionOfConfigGuess ./
 		libertine_public_autoconf_replaceWithKnownVersionOfConfigSub ./
 		libertine_public_autoconf_replaceWithKnownVersionOfInstallSh ./
-
-		libertine_public_autoconf_adjustConfigureAcToRemoveGnuTextCruftBeforeAutoconf
+		
+		sed -i -e '/AM_GNU_GETTEXT/d' configure.ac
+		sed -i -e '/AM_ICONV/d' configure.ac
+		
+		sed -i \
+			-e '/^ACLOCAL_AMFLAGS/d' \
+			-e 's/SUBDIRS = po . auto/SUBDIRS = ./g' \
+			Makefile.am
+		
+		printf '\n' >po/Makefile.in.am
 		
 		libtoolize --install --force --verbose
-		autoreconf --install --force --verbose
+		autoreconf --install --force --verbose || true
 		
 		libertine_public_autoconf_modernAutoconfConfigure --disable-doxygen
 
 		libertine_public_ccache_createSymlinks
 
 		libertine_public_autoconf_removePoToRemoveGnuTextCruftBeforeMake
+		
+		# The code in poptconfig.c actually used the presence of glob.h to assume the glibc-specific function `glob_pattern_p` is present - which it isn't in musl.
+		# The 'alternative' is to use gnulib, which is like rubbing chilli in your eyes.
+		sed -i 's/HAVE_GLOB_H 1/HAVE_GLOB_H 0/g' config.h
 		
 		libertine_public_make
 				
@@ -94,4 +106,14 @@ _libertine_compile_popt_internal()
 		fi
 	
 	popd
+	
+	if $isForInitramfsSysroot; then
+		pushd "$(libertine_public_outputHostSysrootPath)"
+			rm -rf usr/share
+		popd
+	else
+		pushd "$(libertine_public_outputBuildSysrootPath)"
+			rm -rf usr/share
+		popd
+	fi
 }

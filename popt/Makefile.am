@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = -I. -I$(top_srcdir)
 AM_CFLAGS = $(POPT_CFLAGS)
-AM_LDFLAGS = $(POPT_LDFLAGS) $(INTLLIBS)
+AM_LDFLAGS = $(POPT_LDFLAGS)
 
 ## begin configmake
 
@@ -71,27 +71,24 @@ CLEANFILES = configmake.h configmake.h-t
 
 EXTRA_DIST = lookup3.c autogen.sh CHANGES  \
 	footer_no_timestamp.html libpopt.vers README-prereq \
+	$(TESTS) test-poptrc \
 	popt.xcodeproj/project.pbxproj \
-	popt.ps Doxyfile \
-	Makefile.mingw config.h.mingw
-
-dist_noinst_SCRIPTS = \
-	autogen.sh \
-	testit.sh
-dist_noinst_DATA = \
-	test-poptrc \
-	test3-data/01.answer \
-	test3-data/01.input \
-	test3-data/02.answer \
-	test3-data/02.input \
-	test3-data/03.answer \
-	test3-data/03.input
+	popt.ps Doxyfile 	test3-data/01.answer \
+				test3-data/01.input \
+				test3-data/02.answer \
+				test3-data/02.input \
+				test3-data/03.answer \
+				test3-data/03.input \
+                                Makefile.mingw \
+                                config.h.mingw
 
 SUBDIRS = po . auto
+
 
 noinst_HEADERS = poptint.h system.h
 
 check_PROGRAMS  = test1 test2 tdict test3
+
 check_SCRIPTS	= $(TESTS)
 
 
@@ -112,8 +109,9 @@ test2_LDADD  = $(top_builddir)/$(usrlib_LTLIBRARIES)
 tdict_LDADD  = $(top_builddir)/$(usrlib_LTLIBRARIES)
 test3_LDADD  = $(top_builddir)/$(usrlib_LTLIBRARIES)
 
-TESTS_ENVIRONMENT = top_srcdir=$(top_srcdir) MUDFLAP_OPTIONS="$(MUDFLAP_OPTIONS)" testpoptrc="test-poptrc" PATH=.:../src:$$PATH \
-                        valgrind_environment="$(VALGRIND_ENVIRONMENT)"
+TESTS_ENVIRONMENT = top_srcdir=$(top_srcdir) MUDFLAP_OPTIONS="$(MUDFLAP_OPTIONS)" testpoptrc="$(top_srcdir)/test-poptrc" PATH=.:../src:$$PATH \
+                        valgrind_environment="$(VALGRIND_ENVIRONMENT)" \
+			$(SHELL)
 
 
 TESTS = testit.sh
@@ -125,7 +123,6 @@ usrlib_LTLIBRARIES = libpopt.la
 
 libpopt_la_SOURCES = popt.c poptparse.c poptconfig.c popthelp.c poptint.c
 libpopt_la_LDFLAGS = -no-undefined $(AM_LDFLAGS)
-libpopt_la_LIBADD = $(LTLIBICONV)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = popt.pc
@@ -139,14 +136,10 @@ endif
 
 dist_man_MANS = popt.3
 
-BUILT_SOURCES += popt.pc .syntastic_c_config
-
-.syntastic_c_config: Makefile
-	@echo $(COMPILE) | tr ' ' '\n' | sed -e '1d' > $@
+BUILT_SOURCES += popt.pc 
 
 distclean-local:
-	rm -rf .ccache .syntastic_c_config
-	rm -f cscope.files cscope.out cscope.in.out cscope.po.out
+	rm -rf .ccache 
 
 clean-local:
 	rm -rf doxygen *.gcda *.gcno lcov-result popt-valgrind-result 
@@ -162,22 +155,6 @@ endif
 if HAVE_MCCABE
 mccabe:
 	$(MCCABE) $(libpopt_la_SOURCES) | sort -n -r | head -n 10
-endif
-
-if HAVE_CPPCHECK
-cppcheck:
-	$(CPPCHECK) -q --force --inline-suppr \
-	  --template="{file},{line},{severity},{id},{message}" \
-	  -UNOTYET -UNOTNOW -UNOTNEEDED -UDYING -UDEAD -UREFERENCE \
-	  -U__cplusplus -U__LCLINT__ -USWIG \
-	  -U_JLU3_SELFTEST \
-	  -U _WIN64 \
-	  -U __NeXT \
-	  -DHAVE_CONFIG_H \
-	  -DPOPT_fprintf=fprintf \
-	  --enable=warning,style,performance,portability,information,unusedFunction,missingInclude \
-	  $(AM_CPPFLAGS) -I$(includedir) \
-	  $(libpopt_la_SOURCES) test1.c test2.c test3.c tdict.c
 
 endif
 
@@ -187,24 +164,6 @@ doxygen: Doxyfile
 	mkdir -p doxygen
 	$(DOXYGEN)
 endif 
-
-# --- scan.coverity.com manual submission in $(PACKAGE).tgz
-COVDIR =	cov-int
-COVBUILD =	cov-build --dir $(COVDIR)
-COVFILE =	$(PACKAGE)-scan.tgz
-COVSITE =	https://scan.coverity.com/builds?project=$(PACKAGE_NAME)
-covscan:
-	rm -rf $(COVDIR) $(PACKAGE).tgz
-	make clean
-	$(COVBUILD) make -j4
-	tar czf $(COVFILE) $(COVDIR)
-	curl --form project=$(PACKAGE) \
-	     --form token=HEYLAdeYklp2QrsRMaHVAw  \
-	     --form email=n3npq@mac.com \
-	     --form file=@$(COVFILE) \
-	     --form version=$(PACKAGE_VERSION) \
-	     --form description=$$(date -u "+%Y%m%d.%H%M%S") \
-	     $(COVSITE)
 
 if HAVE_LCOV
 # run lcov from scratch, always

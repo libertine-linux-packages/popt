@@ -1,33 +1,11 @@
 1.17 -> 2.0:
-    - jbj: fix: SYSCONFDIR as prefix, not literal, when globbing (rtc@helen.PLASMA.Xg8.DE).
-    - jbj: fix: handle glob(3) error returns (bz#1051685).
-    - jbj: i18n: update PO files (Translation Project).
-    - jbj: fix: free con->os->nextArg when used (memory leaks).
-    - jbj: enable SUPPORT_GLOBAL_CALCULATOR.
-    - jbj: revert to SUPPORT_CONTIGUOUS_ARGV: alias/exec have memroy leaks.
-    - jbj: add poptGlob_pattern_p() always (portability).
-    - jbj: use poptArgvFree to avoid memory leaks.
-    - jbj: i18n: update PO files (Translation Project).
-    - jbj: i18n: update PO files (Translation Project).
-    - jbj: i18n: update da fr nb nl uk, and msgmerge (Translation Project).
-    - jbj: i18n: add gu hr ia kn pt_BR ta, msgmerge (Translation Project).
-    - devzero2000: add cpp suppressions directive for dealing with
-      false positive. Enable cppcheck inline suppression for
-      the make cppcheck target
-    - devzero2000: popthelp.c reduce variables scope (cppcheck warning)
-    - devzero2000: poptint.c reduce variables scope (cppcheck warning)
-    - devzero2000: poptconfig.c reduce variables scope (cppcheck warning)
-    - devzero2000: add cppcheck conditional makefile target
-    - devzero2000: drop expr syntax error in make check under dash
-    - devzero2000: Print to the end of the configure phase the options we have
-      enabled and their results on the basis of the target system
-    - devzero2000: fail autogen.sh if autoreconf fail 
-    - devzero2000: refine the --enable-valgrind autoconf check
-      we are now analyzing with valgrind only the test suite
-      and not the shell that invokes them, so drop the suppression. 
-      Drop also the unused AM_CONDITIONAL macro USE_VALGRIND.
-    - devzero2000: Don't use MALLOC_CHECK_ and valgrind(memcheck) at the
+    - devzero2000: autogen.sh : add --download option for config.{guess,sub}
+    - devzero2000: fix autofu for automake 1.14 and gettext 0.19
+    - devzero2000: fix misspelling
+      Fix misspelling using  http://github.com/lyda/misspell-check
+    - devzero2000: don't use MALLOC_CHECK_ and valgrind(memcheck) at the
       same time
+
       The test suite can use valgrind(memcheck) via 'configure --enable-valgrind'
       Memcheck wraps client calls to malloc(), and puts a "red zone" on
       each end of each block in order to detect access overruns.
@@ -42,34 +20,36 @@
       of using MALLOC_CHECK_ and memcheck together, would be if MALLOC_CHECK_
       detected duplicate free() in more cases than memcheck because memcheck's
       buffer is too small.
+    - devzero2000: redo the --enable-valgrind autoconf check
+      It is much better to analyze with valgrind only the test suite 
+      and not the shell that invokes them. Drop also the unused
+      AM_CONDITIONAL macro USE_VALGRIND
     - devzero2000: malloc check voodo portability quirk
       Get rid of a non portable shell export VAR=VALUE
-      costruct. "Posix requires export to honor assignments
-      made as arguments, but older shells do not support this,
-      including /bin/sh in Solaris 10.
-      Portable scripts should separate assignments
+      costruct. "Posix requires export to honor assignments 
+      made as arguments, but older shells do not support this, 
+      including /bin/sh in Solaris 10. 
+      Portable scripts should separate assignments 
       and exports into different statements"
       (from http://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Limitations-of-Builtins.html)
-    - devzero2000: check secure_getenv for glibc 2.17 
+    - devzero2000: check secure_getenv for glibc 2.17 correctly
       Use secure_getenv if it is available.
-      Fall back to __secure_getenv if it is not.
+      Fall back to __secure_getenv if it is not. 
+    - devzero2000: check secure_getenv for glibc 2.17
       In glibc 2.17, __secure_getenv was renamed to secure_getenv.
       So check also for it.
-      Reference:
-       http://sourceware.org/glibc/wiki/Tips_and_Tricks/secure_getenv
-       http://marc.info/?t=134192618500001&r=1&w=2
-    - devzero2000: update the gettext version prereq
-    - devzero2000: fix misspelling
-      Fix misspelling using  http://github.com/lyda/misspell-check
-    - devzero2000: quote AC_PREREQ in configure.ac
-      for a old bug autoupdate don't do it before autoconf v2.66
-      (http://lists.gnu.org/archive/html/autoconf-patches/2010-06/msg00014.html)
-    - jbj: add sr.po (Translation Project).
+      Reference: 
+          http://sourceware.org/glibc/wiki/Tips_and_Tricks/secure_getenv
+          http://marc.info/?t=134192618500001&r=1&w=2
+    - devzero2000: redo the malloc check voo-doo
+      in a more simple way. Drop all the crap
+      around to create a portable shell function for 
+      random number generation.
+      $$ alone suffices to avoid the bias.
+    - devzero2000: redo the malloc check voo-doo
+      in a more portable way. Permit testit.sh
+      work if it is called directly also.
     - devzero2000: fix compiler warning -Wunused-variable 
-    - jbj: use words instead of jargon to increase portability 
-    - jbj: macosx: needs $(INTLLIBS) explictly.
-    - jbj: autofu: fix: MacPorts uses glibtool/gliboolize. test earlier.
-    - jbj: i18n: msgmerge (Translation Project).
     - devzero2000: Enable many more gcc warnings for popt
       Inspired by http://www.spinics.net/lists/selinux/msg11726.html
       but popt can, unlike libselinux now, also detect if  

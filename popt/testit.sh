@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh 
 ###############################################
 # malloc voo-doo
 ###############################################
@@ -25,22 +25,15 @@
 # buffer is too small.
 # Therefore we don't use MALLOC_CHECK_ and valgrind(memcheck) at the
 # same time.
-###############################################
-if [ -z "${valgrind_environment}" ]
+############################################### 
+if [ -z "$valgrind_environment" ]
 then
 	MALLOC_CHECK_=3
 	export MALLOC_CHECK_
-	[ -n "${RANDOM}" ] && MALLOC_PERTURB_=$(expr \( $RANDOM % 255 \) + 1 )
+	MALLOC_PERTURB_="$( expr \( $$ % 255 \) + 1)"
 	export MALLOC_PERTURB_
-	#
-	if [ -z "${MALLOC_PERTURB_}" ]  # RANDOM is a bashism
-	then
-		r=$(ps -ef | cksum | cut -f1 -d" " 2>/dev/null)
-		[ -z "${r}" ] && r=1234567890
-		MALLOC_PERTURB_=$(expr \( $r % 255 \) + 1 )
-		export MALLOC_PERTURB_
-	fi
 fi
+#
 
 run() {
     prog=$1; shift
@@ -49,7 +42,9 @@ run() {
 
     echo Running test $name.
 
-    result=$(HOME=$builddir $builddir/$prog $* 2>&1)
+    echo $PWD
+
+    result=`HOME=$builddir $valgrind_environment $builddir/$prog $* 2>&1`
 
     if [ "$answer" != "$result" ]; then
 	echo "Test \"$prog $*\" failed with: \"$result\" != \"$answer\" "
@@ -81,7 +76,9 @@ run_diff() {
     rm $out $diff_file
 }
 
-builddir=$(pwd)
+builddir=`pwd`
+[ -z "$srcdir" ] && srcdir=$builddir
+cd ${srcdir}
 test1=${builddir}/test1
 echo "Running tests in $builddir" 
 
@@ -540,12 +537,12 @@ if [ -f /usr/share/dict/words ]
 then
 run tdict "tdict - 1" "\
 ===== Some words are in /usr/share/dict/words
-hope:	YES
-faith:	YES
-charity:	YES
-troofth:	NO
-juicetess:	NO
-total(5) = hits(3) + misses(2)" hope faith charity troofth juicetess
+a:	YES
+b:	YES
+rpm:	YES
+dpkg:	YES
+ipkg:	NO
+total(5) = hits(4) + misses(1)" a b rpm dpkg ipkg
 run tdict "tdict - 2" "\
 Usage: tdict [-?] [-d|--debug] [-v|--verbose] [-?|--help] [--usage]" --usage
 run tdict "tdict - 3" "\
@@ -565,9 +562,9 @@ fi
 # Begin test3 test
 ###################
 
-run_diff test3 "test3 - 1" ./test3-data/01.input ./test3-data/01.answer
-run_diff test3 "test3 - 2" ./test3-data/02.input ./test3-data/02.answer
-run_diff test3 "test3 - 3" ./test3-data/03.input ./test3-data/03.answer
+run_diff test3 "test3 - 1" $srcdir/test3-data/01.input $srcdir/test3-data/01.answer
+run_diff test3 "test3 - 2" $srcdir/test3-data/02.input $srcdir/test3-data/02.answer
+run_diff test3 "test3 - 3" $srcdir/test3-data/03.input $srcdir/test3-data/03.answer
 
 ###################
 # End   test3 test

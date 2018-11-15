@@ -16,7 +16,7 @@
 #define assert(_x)
 #endif
 
-const char ** poptArgvFree(/*@only@*/ const char ** av)
+static const char ** poptArgvFree(/*@only@*/ const char ** av)
 {
 #if !defined(SUPPORT_CONTIGUOUS_ARGV)
     if (av) {
@@ -25,7 +25,6 @@ const char ** poptArgvFree(/*@only@*/ const char ** av)
 	av[i] = _free(av[i]);
     }
 #endif
-    // cppcheck-suppress uselessAssignmentPtrArg
     av = _free(av);
     return NULL;
 }
@@ -123,7 +122,6 @@ assert(te);	/* XXX can't happen */
 		*te++ = '\0', argc++;
 		if (argc == argvAlloced) {
 		    argvAlloced += POPT_ARGV_ARRAY_GROW_DELTA;
-		    /* cppcheck-suppress memleakOnRealloc  */
 		    argv = (const char**) xrealloc(argv, sizeof(*argv) * argvAlloced);
 assert(argv);	/* XXX can't happen */
 		    if (argv == NULL) goto exit;
@@ -171,8 +169,7 @@ int poptConfigFileToString(FILE *fp, char ** argstrp,
 		/*@unused@*/ UNUSED(int flags))
 {
     size_t nline = 8192;	/* XXX configurable? */
-    // cppcheck-suppress obsoleteFunctionsalloca
-    char * line = (char *) alloca(nline);
+    char * line = (char*) alloca(nline);
     char * argstr;
     char * q;
     char * x;
@@ -180,7 +177,6 @@ int poptConfigFileToString(FILE *fp, char ** argstrp,
     size_t argvlen = 0;
     size_t maxargvlen = (size_t)480;
 
-    // cppcheck-suppress nullPointer
     if (argstrp)
 	*argstrp = NULL;
 
@@ -229,7 +225,6 @@ assert(argstr);	/* XXX can't happen */
 	    argvlen += (t = (size_t)(q - l)) + (sizeof(" --")-1);
 	    if (argvlen >= maxargvlen) {
 		maxargvlen = (t > maxargvlen) ? t*2 : maxargvlen*2;
-		/* cppcheck-suppress memleakOnRealloc  */
 		argstr = (char*) xrealloc(argstr, maxargvlen);
 assert(argstr);	/* XXX can't happen */
 		if (argstr == NULL) return POPT_ERROR_MALLOC;
@@ -260,7 +255,6 @@ assert(argstr);	/* XXX can't happen */
 	argvlen += t + (sizeof("' --='")-1);
 	if (argvlen >= maxargvlen) {
 	    maxargvlen = (t > maxargvlen) ? t*2 : maxargvlen*2;
-	    /* cppcheck-suppress memleakOnRealloc  */
 	    argstr = (char*) xrealloc(argstr, maxargvlen);
 assert(argstr);	/* XXX can't happen */
 	    if (argstr == NULL) return POPT_ERROR_MALLOC;

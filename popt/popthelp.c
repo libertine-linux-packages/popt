@@ -55,7 +55,6 @@ static void displayArgs(poptContext con,
 	poptPrintUsage(con, stdout, 0);
 
 #if !defined(__LCLINT__)	/* XXX keep both splint & valgrind happy */
-    // cppcheck-suppress uselessAssignmentPtrArg
     con = poptFreeContext(con);
 #endif
     exit(0);
@@ -485,6 +484,7 @@ assert(t);	/* XXX can't happen */
     helpLength = strlen(help);
     while (helpLength > lineLength) {
 	const char * ch;
+	char format[16];
 
 	ch = help + lineLength - 1;
 	while (ch > help && !_isspaceptr(ch))
@@ -500,7 +500,6 @@ assert(t);	/* XXX can't happen */
 	 */
 	{   char * fmthelp = xstrdup(help);
 	    if (fmthelp) {
-	    char format[16];
 		fmthelp[ch - help] = '\0';
 		sprintf(format, "%%s\n%%%ds", (int) indentLength);
 		/*@-formatconst@*/
@@ -537,6 +536,7 @@ static size_t maxArgWidth(const struct poptOption * opt,
 	/*@*/
 {
     size_t max = 0;
+    const char * argDescrip;
 
     if (opt != NULL)
     while (opt->longName || opt->shortName || opt->arg) {
@@ -547,7 +547,6 @@ static size_t maxArgWidth(const struct poptOption * opt,
 	    if (len > max) max = len;
 	} else if (!F_ISSET(opt, DOC_HIDDEN)) {
 	    len = sizeof("  ")-1;
-	    const char * argDescrip;
 	    /* XXX --long always padded for alignment with/without "-X, ". */
 	    len += sizeof("-X, ")-1;
 	    if (opt->longName) {
@@ -619,6 +618,7 @@ static void singleTableHelp(poptContext con, FILE * fp,
 	/*@modifies fp, columns->cur, fileSystem @*/
 {
     const struct poptOption * opt;
+    const char *sub_transdom;
 
     if (table == poptAliasOptions) {
 	itemHelp(fp, con->aliases, con->numAliases, columns, NULL);
@@ -634,7 +634,6 @@ static void singleTableHelp(poptContext con, FILE * fp,
 
     if (table != NULL)
     for (opt = table; opt->longName || opt->shortName || opt->arg; opt++) {
-	const char *sub_transdom;
 	if (poptArgType(opt) != POPT_ARG_INCLUDE_TABLE)
 	    continue;
 	sub_transdom = getTableTranslationDomain(opt->arg);
